@@ -11,3 +11,9 @@ func FindAllUsers() ([]model.User, error) {
 func CreateUser(user *model.User) error {
 	return DB.Create(user).Error
 }
+
+func FindUserByEmail(email string) (model.User, error) {
+	var user model.User
+	result := DB.Preload("Role").Where("email = ?", email).First(&user)
+	return user, result.Error
+}

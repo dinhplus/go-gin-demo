@@ -14,6 +14,7 @@ import (
 // @Tags         users
 // @Produce      json
 // @Success      200  {array}  model.User
+// @Security     BearerAuth
 // @Router       /users [get]
 func GetUsers(c *gin.Context) {
 	users, err := service.GetAllUsers()
@@ -33,6 +34,7 @@ func GetUsers(c *gin.Context) {
 // @Param        user  body      model.User  true  "User to create"
 // @Success      201   {object}  model.User
 // @Failure      400   {object}  map[string]string
+// @Security     BearerAuth
 // @Router       /users [post]
 func CreateUser(c *gin.Context) {
 	var user model.User
