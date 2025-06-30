@@ -46,14 +46,17 @@ A simple REST API using Go and Gin.
     │   ├── docs.go
     │   ├── swagger.json
     │   └── swagger.yaml
+    ├── example.env
     ├── go.mod
     ├── go.sum
     └── internal
         ├── client
         │   └── thirdparty_client.go
         ├── handler
+        │   ├── auth_handler.go
         │   ├── department_handler.go
         │   ├── handler.go
+        │   ├── permission_middleware.go
         │   ├── position_handler.go
         │   ├── routes.go
         │   ├── stack_handler.go
@@ -61,24 +64,29 @@ A simple REST API using Go and Gin.
         ├── model
         │   ├── department.go
         │   ├── model.go
+        │   ├── permission.go
         │   ├── position.go
+        │   ├── role.go
         │   ├── stack.go
         │   └── user.go
         ├── repository
         │   ├── db.go
         │   ├── department_repository.go
+        │   ├── permission_repository.go
         │   ├── position_repository.go
         │   ├── repository.go
+        │   ├── role_repository.go
         │   ├── seed.go
         │   ├── stack_repository.go
         │   └── user_repository.go
         └── service
             ├── department_service.go
+            ├── permission_service.go
             ├── position_service.go
+            ├── role_service.go
             ├── service.go
             ├── stack_service.go
             └── user_service.go
-
     ```
 ## 3rd-Party Service Integration
 
