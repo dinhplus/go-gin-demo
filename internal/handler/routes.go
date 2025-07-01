@@ -1,6 +1,8 @@
 package handler
 
 import (
+	docs "my-gin-app/docs"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-contrib/requestid"
@@ -10,6 +12,23 @@ import (
 	ginprometheus "github.com/zsais/go-gin-prometheus"
 	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
 )
+
+type HandlerList struct {
+	LoginHandler          gin.HandlerFunc
+	RefreshTokenHandler   gin.HandlerFunc
+	RegisterHandler       gin.HandlerFunc
+	ForgotPasswordHandler gin.HandlerFunc
+	Ping                  gin.HandlerFunc
+	GetUsers              gin.HandlerFunc
+	CreateUser            gin.HandlerFunc
+	GetDepartments        gin.HandlerFunc
+	CreateDepartment      gin.HandlerFunc
+	GetStacks             gin.HandlerFunc
+	CreateStack           gin.HandlerFunc
+	GetPositions          gin.HandlerFunc
+	CreatePosition        gin.HandlerFunc
+	AdminOnly             gin.HandlerFunc
+}
 
 func SetupRouter() *gin.Engine {
 	r := gin.New()
@@ -60,17 +79,35 @@ func SetupRouter() *gin.Engine {
 		auth.GET("/admin", AdminOnly(), func(c *gin.Context) {
 			c.JSON(200, gin.H{"message": "admin access granted"})
 		})
+
+		// RBAC/Feature flag endpoints
+		auth.GET("/permissions", GetPermissions)
+		auth.POST("/permissions", CreatePermission)
+		auth.GET("/resources", GetResources)
+		auth.POST("/resources", CreateResource)
+		auth.GET("/feature-flags", GetFeatureFlags)
+		auth.POST("/feature-flags", CreateFeatureFlag)
 	}
 
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	docs.SwaggerInfo.Title = "Dinh DZ app"
+	docs.SwaggerInfo.Description = "This is a sample server for a Gin application."
+	docs.SwaggerInfo.Version = "1.0"
+	docs.SwaggerInfo.Host = "localhost:8080"
+	docs.SwaggerInfo.BasePath = "/"
+	docs.SwaggerInfo.Schemes = []string{"http", "https"}
+	// Swagger setup
+	r.GET("/swagger/*any", SwaggerHandler())
+
+	// r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	return r
 }
 
 func SwaggerHandler() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		// ...existing code for swagger handler..
-		c.Next()
-
-	}
+	return ginSwagger.WrapHandler(
+		swaggerFiles.Handler,
+		ginSwagger.URL("http://localhost:8080/swagger/doc.json"),
+		ginSwagger.DeepLinking(true),
+		ginSwagger.DocExpansion("none"),
+	)
 }

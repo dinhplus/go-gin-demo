@@ -1,0 +1,587 @@
+basePath: /
+definitions:
+  handler.Login:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  model.Department:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  model.Permission:
+    properties:
+      action:
+        description: view, create, update, delete
+        type: string
+      feature_flag:
+        description: tên hoặc mã feature flag, rỗng nếu không dùng
+        type: string
+      id:
+        type: integer
+      resource:
+        $ref: '#/definitions/model.Resource'
+      resource_id:
+        type: integer
+      roles:
+        items:
+          $ref: '#/definitions/model.Role'
+        type: array
+    type: object
+  model.Position:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  model.Resource:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      permissions:
+        items:
+          $ref: '#/definitions/model.Permission'
+        type: array
+    type: object
+  model.Role:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      permissions:
+        items:
+          $ref: '#/definitions/model.Permission'
+        type: array
+      users:
+        items:
+          $ref: '#/definitions/model.User'
+        type: array
+    type: object
+  model.Stack:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  model.User:
+    properties:
+      department:
+        $ref: '#/definitions/model.Department'
+      department_id:
+        type: integer
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      password:
+        type: string
+      position:
+        $ref: '#/definitions/model.Position'
+      position_id:
+        type: integer
+      role:
+        $ref: '#/definitions/model.Role'
+      role_id:
+        type: integer
+      stack:
+        $ref: '#/definitions/model.Stack'
+      stack_id:
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This is a sample server for a Gin application.
+  title: My Gin App API
+  version: "1.0"
+paths:
+  /departments:
+    get:
+      description: get all departments
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Department'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: List departments
+      tags:
+      - departments
+    post:
+      consumes:
+      - application/json
+      description: create a new department
+      parameters:
+      - description: Department to create
+        in: body
+        name: department
+        required: true
+        schema:
+          $ref: '#/definitions/model.Department'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Department'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create department
+      tags:
+      - departments
+  /feature-flags:
+    get:
+      description: get all feature flags (distinct from permissions)
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: string
+            type: array
+      security:
+      - BearerAuth: []
+      summary: List feature flags
+      tags:
+      - feature-flags
+    post:
+      consumes:
+      - application/json
+      description: create a new feature flag (as a permission with feature_flag field)
+      parameters:
+      - description: Feature flag info
+        in: body
+        name: flag
+        required: true
+        schema:
+          additionalProperties:
+            type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Permission'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create feature flag
+      tags:
+      - feature-flags
+  /forgot_password:
+    post:
+      consumes:
+      - application/json
+      description: Send password reset instructions
+      parameters:
+      - description: User email
+        in: body
+        name: email
+        required: true
+        schema:
+          additionalProperties:
+            type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Forgot password
+      tags:
+      - auth
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user and return JWT token
+      parameters:
+      - description: Login credentials
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/handler.Login'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: User login
+      tags:
+      - auth
+  /permissions:
+    get:
+      description: get all permissions
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Permission'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: List permissions
+      tags:
+      - permissions
+    post:
+      consumes:
+      - application/json
+      description: create a new permission
+      parameters:
+      - description: Permission to create
+        in: body
+        name: permission
+        required: true
+        schema:
+          $ref: '#/definitions/model.Permission'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Permission'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create permission
+      tags:
+      - permissions
+  /ping:
+    get:
+      description: Returns pong if the server is running
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Health check
+      tags:
+      - health
+  /positions:
+    get:
+      description: get all positions
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Position'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: List positions
+      tags:
+      - positions
+    post:
+      consumes:
+      - application/json
+      description: create a new position
+      parameters:
+      - description: Position to create
+        in: body
+        name: position
+        required: true
+        schema:
+          $ref: '#/definitions/model.Position'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Position'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create position
+      tags:
+      - positions
+  /refresh_token:
+    get:
+      description: Refresh an existing JWT token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Refresh JWT token
+      tags:
+      - auth
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user and store securely hashed password in the database.
+        Username must be unique and password is hashed with a secret key before saving.
+        Returns user_id if successful.
+      parameters:
+      - description: User registration info
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/handler.Login'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      - BearerAuth: []
+      summary: Register user
+      tags:
+      - auth
+  /resources:
+    get:
+      description: get all resources
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Resource'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: List resources
+      tags:
+      - resources
+    post:
+      consumes:
+      - application/json
+      description: create a new resource
+      parameters:
+      - description: Resource to create
+        in: body
+        name: resource
+        required: true
+        schema:
+          $ref: '#/definitions/model.Resource'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Resource'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create resource
+      tags:
+      - resources
+  /stacks:
+    get:
+      description: get all stacks
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Stack'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: List stacks
+      tags:
+      - stacks
+    post:
+      consumes:
+      - application/json
+      description: create a new stack
+      parameters:
+      - description: Stack to create
+        in: body
+        name: stack
+        required: true
+        schema:
+          $ref: '#/definitions/model.Stack'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Stack'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create stack
+      tags:
+      - stacks
+  /users:
+    get:
+      description: get all users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.User'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: List users
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      description: create a new user
+      parameters:
+      - description: User to create
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.User'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.User'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create user
+      tags:
+      - users
+securityDefinitions:
+  BearerAuth:
+    description: 'JWT Authorization header using the Bearer scheme. Example: "Authorization:
+      Bearer {token}"'
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
