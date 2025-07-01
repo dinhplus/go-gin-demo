@@ -14,6 +14,7 @@ import (
 // @Tags         positions
 // @Produce      json
 // @Success      200  {array}  model.Position
+// @Security     BearerAuth
 // @Router       /positions [get]
 func GetPositions(c *gin.Context) {
 	positions, err := service.GetAllPositions()
@@ -33,6 +34,7 @@ func GetPositions(c *gin.Context) {
 // @Param        position  body      model.Position  true  "Position to create"
 // @Success      201   {object}  model.Position
 // @Failure      400   {object}  map[string]string
+// @Security     BearerAuth
 // @Router       /positions [post]
 func CreatePosition(c *gin.Context) {
 	var pos model.Position

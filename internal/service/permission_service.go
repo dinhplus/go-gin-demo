@@ -5,6 +5,6 @@ import (
 	"my-gin-app/internal/repository"
 )
 
-func GetPermission(resource, action string) (model.Permission, error) {
-	return repository.FindPermission(resource, action)
+func GetPermission(resourceID int, action string) (model.Permission, error) {
+	return repository.FindPermission(resourceID, action)
 }

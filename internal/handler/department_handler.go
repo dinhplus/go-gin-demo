@@ -14,6 +14,7 @@ import (
 // @Tags         departments
 // @Produce      json
 // @Success      200  {array}  model.Department
+// @Security     BearerAuth
 // @Router       /departments [get]
 func GetDepartments(c *gin.Context) {
 	depts, err := service.GetAllDepartments()
@@ -33,6 +34,7 @@ func GetDepartments(c *gin.Context) {
 // @Param        department  body      model.Department  true  "Department to create"
 // @Success      201   {object}  model.Department
 // @Failure      400   {object}  map[string]string
+// @Security     BearerAuth
 // @Router       /departments [post]
 func CreateDepartment(c *gin.Context) {
 	var dept model.Department

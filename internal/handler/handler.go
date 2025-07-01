@@ -12,6 +12,7 @@ import (
 // @Tags         health
 // @Produce      json
 // @Success      200  {object}  map[string]string
+// @Security     BearerAuth
 // @Router       /ping [get]
 // Ping is a simple handler to check if the server is running.
 func Ping(c *gin.Context) {

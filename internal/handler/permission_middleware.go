@@ -3,7 +3,6 @@ package handler
 import (
 	"net/http"
 	"strconv"
-	"strings"
 
 	"my-gin-app/internal/service"
 
@@ -22,7 +21,18 @@ func RequirePermission(resource, action string) gin.HandlerFunc {
 			return
 		}
 		for _, perm := range role.Permissions {
-			if strings.EqualFold(perm.Resource, resource) && strings.EqualFold(perm.Action, action) {
+
+			if perm.Action == "manage" && (perm.Resource.Name == resource || perm.Resource.Name == "all") {
+				c.Next()
+				return
+			}
+
+			if (perm.Resource.Name == "all") && (perm.Action == action || perm.Action == "manage") {
+				c.Next()
+				return
+			}
+
+			if perm.Resource.Name == resource && perm.Action == action {
 				c.Next()
 				return
 			}

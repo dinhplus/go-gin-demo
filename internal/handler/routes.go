@@ -34,12 +34,20 @@ func SetupRouter() *gin.Engine {
 	r.GET("/refresh_token", RefreshTokenHandler)
 	r.POST("/register", RegisterHandler)
 	r.POST("/forgot_password", ForgotPasswordHandler)
+	r.GET("/ping", Ping)
 
 	// Protected routes
-	auth := r.Group("/api")
+	// @BasePath /
+	// @securityDefinitions.apikey BearerAuth
+	// @in header
+	// @type http
+	// @name Authorization
+	// @description JWT Authorization header using the Bearer scheme. Example: "Authorization: Bearer {token}"
+	// @Security BearerAuth
+	auth := r.Group("")
 	auth.Use(jwtMw.MiddlewareFunc())
 	{
-		auth.GET("/ping", Ping)
+
 		auth.GET("/users", GetUsers)
 		auth.POST("/users", CreateUser)
 		auth.GET("/departments", GetDepartments)

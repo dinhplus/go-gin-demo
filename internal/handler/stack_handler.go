@@ -14,6 +14,7 @@ import (
 // @Tags         stacks
 // @Produce      json
 // @Success      200  {array}  model.Stack
+// @Security     BearerAuth
 // @Router       /stacks [get]
 func GetStacks(c *gin.Context) {
 	stacks, err := service.GetAllStacks()
@@ -33,6 +34,7 @@ func GetStacks(c *gin.Context) {
 // @Param        stack  body      model.Stack  true  "Stack to create"
 // @Success      201   {object}  model.Stack
 // @Failure      400   {object}  map[string]string
+// @Security     BearerAuth
 // @Router       /stacks [post]
 func CreateStack(c *gin.Context) {
 	var stack model.Stack

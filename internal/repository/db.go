@@ -40,9 +40,7 @@ func InitDB() {
 		&model.Position{},
 		&model.Role{},
 		&model.Permission{},
+		&model.Resource{},
 	)
-	SeedRoles()
-	SeedDepartments()
-	SeedStacks()
-	SeedPositions()
+	SeedData()
 }
