@@ -1,0 +1,236 @@
+scalar Time
+
+type Query {
+  # User queries
+  users(limit: Int = 10, offset: Int = 0): [User!]!
+  user(id: ID!): User
+  userByEmail(email: String!): User
+  
+  # Department queries
+  departments(limit: Int = 10, offset: Int = 0): [Department!]!
+  department(id: ID!): Department
+  
+  # Position queries
+  positions(limit: Int = 10, offset: Int = 0): [Position!]!
+  position(id: ID!): Position
+  
+  # Stack queries
+  stacks(limit: Int = 10, offset: Int = 0): [Stack!]!
+  stack(id: ID!): Stack
+  
+  # Role queries
+  roles(limit: Int = 10, offset: Int = 0): [Role!]!
+  role(id: ID!): Role
+  
+  # Permission queries
+  permissions(limit: Int = 10, offset: Int = 0): [Permission!]!
+  permission(id: ID!): Permission
+  
+  # Resource queries
+  resources(limit: Int = 10, offset: Int = 0): [Resource!]!
+  resource(id: ID!): Resource
+  
+  # Feature Flag queries
+  featureFlags(limit: Int = 10, offset: Int = 0): [FeatureFlag!]!
+  featureFlag(id: ID!): FeatureFlag
+  
+  # Health check
+  ping: String!
+}
+
+type Mutation {
+  # User mutations
+  createUser(input: CreateUserInput!): User!
+  updateUser(id: ID!, input: UpdateUserInput!): User!
+  deleteUser(id: ID!): Boolean!
+  
+  # Department mutations
+  createDepartment(input: CreateDepartmentInput!): Department!
+  updateDepartment(id: ID!, input: UpdateDepartmentInput!): Department!
+  deleteDepartment(id: ID!): Boolean!
+  
+  # Position mutations
+  createPosition(input: CreatePositionInput!): Position!
+  updatePosition(id: ID!, input: UpdatePositionInput!): Position!
+  deletePosition(id: ID!): Boolean!
+  
+  # Stack mutations
+  createStack(input: CreateStackInput!): Stack!
+  updateStack(id: ID!, input: UpdateStackInput!): Stack!
+  deleteStack(id: ID!): Boolean!
+  
+  # Role mutations
+  createRole(input: CreateRoleInput!): Role!
+  updateRole(id: ID!, input: UpdateRoleInput!): Role!
+  deleteRole(id: ID!): Boolean!
+  
+  # Permission mutations
+  createPermission(input: CreatePermissionInput!): Permission!
+  updatePermission(id: ID!, input: UpdatePermissionInput!): Permission!
+  deletePermission(id: ID!): Boolean!
+  
+  # Resource mutations
+  createResource(input: CreateResourceInput!): Resource!
+  updateResource(id: ID!, input: UpdateResourceInput!): Resource!
+  deleteResource(id: ID!): Boolean!
+  
+  # Feature Flag mutations
+  createFeatureFlag(input: CreateFeatureFlagInput!): FeatureFlag!
+  updateFeatureFlag(id: ID!, input: UpdateFeatureFlagInput!): FeatureFlag!
+  deleteFeatureFlag(id: ID!): Boolean!
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  departmentId: Int!
+  department: Department!
+  positionId: Int!
+  position: Position!
+  stackId: Int!
+  stack: Stack!
+  roleId: Int!
+  role: Role!
+}
+
+type Department {
+  id: ID!
+  name: String!
+  description: String
+}
+
+type Position {
+  id: ID!
+  name: String!
+  description: String
+}
+
+type Stack {
+  id: ID!
+  name: String!
+  description: String
+}
+
+type Role {
+  id: ID!
+  name: String!
+  description: String
+  permissions: [Permission!]!
+}
+
+type Permission {
+  id: ID!
+  name: String!
+  action: String!
+  resourceId: Int!
+  resource: Resource!
+}
+
+type Resource {
+  id: ID!
+  name: String!
+  description: String
+}
+
+type FeatureFlag {
+  id: ID!
+  name: String!
+  description: String
+  isEnabled: Boolean!
+}
+
+# Input types for mutations
+input CreateUserInput {
+  name: String!
+  email: String!
+  password: String!
+  departmentId: Int!
+  positionId: Int!
+  stackId: Int!
+  roleId: Int!
+}
+
+input UpdateUserInput {
+  name: String
+  email: String
+  password: String
+  departmentId: Int
+  positionId: Int
+  stackId: Int
+  roleId: Int
+}
+
+input CreateDepartmentInput {
+  name: String!
+  description: String
+}
+
+input UpdateDepartmentInput {
+  name: String
+  description: String
+}
+
+input CreatePositionInput {
+  name: String!
+  description: String
+}
+
+input UpdatePositionInput {
+  name: String
+  description: String
+}
+
+input CreateStackInput {
+  name: String!
+  description: String
+}
+
+input UpdateStackInput {
+  name: String
+  description: String
+}
+
+input CreateRoleInput {
+  name: String!
+  description: String
+}
+
+input UpdateRoleInput {
+  name: String
+  description: String
+}
+
+input CreatePermissionInput {
+  name: String!
+  action: String!
+  resourceId: Int!
+}
+
+input UpdatePermissionInput {
+  name: String
+  action: String
+  resourceId: Int
+}
+
+input CreateResourceInput {
+  name: String!
+  description: String
+}
+
+input UpdateResourceInput {
+  name: String
+  description: String
+}
+
+input CreateFeatureFlagInput {
+  name: String!
+  description: String
+  isEnabled: Boolean!
+}
+
+input UpdateFeatureFlagInput {
+  name: String
+  description: String
+  isEnabled: Boolean
+}

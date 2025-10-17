@@ -41,6 +41,7 @@ func InitDB() {
 		&model.Role{},
 		&model.Permission{},
 		&model.Resource{},
+		&model.FeatureFlag{},
 	)
 	SeedData()
 }

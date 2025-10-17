@@ -55,6 +55,10 @@ func SetupRouter() *gin.Engine {
 	r.POST("/forgot_password", ForgotPasswordHandler)
 	r.GET("/ping", Ping)
 
+	// GraphQL endpoints
+	r.POST("/graphql", GraphQLHandler())
+	r.GET("/playground", PlaygroundHandler())
+
 	// Protected routes
 	// @BasePath /
 	// @securityDefinitions.apikey BearerAuth

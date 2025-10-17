@@ -11,3 +11,17 @@ func FindAllDepartments() ([]model.Department, error) {
 func CreateDepartment(dept *model.Department) error {
 	return DB.Create(dept).Error
 }
+
+func FindDepartmentByID(id int) (model.Department, error) {
+	var dept model.Department
+	result := DB.Where("id = ?", id).First(&dept)
+	return dept, result.Error
+}
+
+func UpdateDepartment(dept *model.Department) error {
+	return DB.Save(dept).Error
+}
+
+func DeleteDepartment(id int) error {
+	return DB.Delete(&model.Department{}, id).Error
+}

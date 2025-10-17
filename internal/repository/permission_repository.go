@@ -17,3 +17,17 @@ func FindAllPermissions() ([]model.Permission, error) {
 func CreatePermission(perm *model.Permission) error {
 	return DB.Create(perm).Error
 }
+
+func FindPermissionByID(id int) (model.Permission, error) {
+	var perm model.Permission
+	result := DB.Preload("Resource").Where("id = ?", id).First(&perm)
+	return perm, result.Error
+}
+
+func UpdatePermission(perm *model.Permission) error {
+	return DB.Save(perm).Error
+}
+
+func DeletePermission(id int) error {
+	return DB.Delete(&model.Permission{}, id).Error
+}

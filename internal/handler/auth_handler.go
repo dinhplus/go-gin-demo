@@ -40,8 +40,8 @@ func JwtMiddleware() *jwt.GinJWTMiddleware {
 	mw, _ := jwt.New(&jwt.GinJWTMiddleware{
 		Realm:       "my-gin-app",
 		Key:         []byte("secret key"),
-		Timeout:     time.Hour,
-		MaxRefresh:  time.Hour,
+		Timeout:     24 * time.Hour,
+		MaxRefresh:  24 * time.Hour,
 		IdentityKey: identityKey,
 		Authenticator: func(c *gin.Context) (interface{}, error) {
 			var loginVals Login
